@@ -1,20 +1,15 @@
 connection: "leigha-bq-dev"
+include: "/views/*.view.lkml"
 
-# include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
-# include: "/**/*.view.lkml"                 # include all views in this project
-# include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
-# # Select the views that should be a part of this model,
-# # and define the joins that connect them together.
-#
-# explore: order_items {
-#   join: orders {
-#     relationship: many_to_one
-#     sql_on: ${orders.id} = ${order_items.order_id} ;;
-#   }
-#
-#   join: users {
-#     relationship: many_to_one
-#     sql_on: ${users.id} = ${orders.user_id} ;;
-#   }
-# }
+explore: transaction_detail {
+  join: transaction_detail__line_items {
+    view_label: "Transaction Detail: Line Items"
+    sql: LEFT JOIN UNNEST(${transaction_detail.line_items}) as transaction_detail__line_items ;;
+    relationship: one_to_many
+  }
+  join: customers {
+    relationship: many_to_one
+    sql_on: ${customers.id}=${transaction_detail.customer_id} ;;
+  }
+}
