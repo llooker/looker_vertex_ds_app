@@ -13,6 +13,11 @@ view: customers {
     sql: (select count(distinct transaction_id) from retail.transaction_detail where customer_id = ${id}) ;;
   }
 
+  dimension: prior_spend {
+    type: number
+    sql: (select sum(i.sale_price) from retail.transaction_detail, unnest(line_items) as i where customer_id = ${id}) ;;
+  }
+
   parameter: advertising_channel {
     default_value: "Accessories"
     allowed_value: {
@@ -129,6 +134,8 @@ view: customers {
   dimension: state {
     type: string
     sql: ${TABLE}.state ;;
+    map_layer_name: us_states
+    drill_fields: [zip, city]
   }
 
   dimension: traffic_source {
@@ -139,6 +146,7 @@ view: customers {
   dimension: zip {
     type: zipcode
     sql: ${TABLE}.zip ;;
+    map_layer_name: us_zipcode_tabulation_areas
   }
 
   measure: count {
@@ -154,7 +162,7 @@ view: customers {
 
   measure: average_age {
     type: average
-    hidden: yes
+    value_format_name: decimal_1
     sql: ${age} ;;
   }
 
@@ -180,5 +188,17 @@ view: customers {
     type: average
     hidden: yes
     sql: ${longitude} ;;
+  }
+
+  measure: average_previous_purchases {
+    value_format_name: decimal_1
+    type: average
+    sql: ${previous_purchases} ;;
+  }
+
+  measure: average_prior_spend {
+    value_format_name: usd
+    type: average
+    sql: ${prior_spend} ;;
   }
 }
