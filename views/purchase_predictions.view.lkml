@@ -1,19 +1,23 @@
 view: purchase_predictions {
   sql_table_name: (select * except(predicted_made_order),
-  predicted_made_order.scores[offset(1)] as scores from `sara-vertex-demos.looker_vertex_demo.leigha_predictions_test`)
-;;
+  predicted_made_order.scores[offset(1)] as scores from `leigha-bq-dev.looker_scratch.{% parameter table_name %}_predictions`);;
 
+  parameter: table_name {
+    type: unquoted
+    default_value: "leigha_test"
+  }
 
-  # (select * except(predicted_made_order) from `sara-vertex-demos.looker_vertex_demo.leigha_predictions_test`
-  # left join unnest(predicted_made_order.classes) as classes
-  # left join unnest(predicted_made_order.scores) as scores
-  # where classes = '1');;
-
-  # dimension: pk {
-  #   primary_key: yes
-  #   type: string
-  #   sql: ${TABLE}.pk ;;
-  # }
+  parameter: tablename {
+    type: unquoted
+    allowed_value: {
+      label: "UK"
+      value: "00001.ga_sessions"
+    }
+    allowed_value: {
+      label: "Germany"
+      value: "00002.ga_sessions"
+    }
+  }
 
   dimension: customer_id {
     primary_key: yes
@@ -120,6 +124,10 @@ view: purchase_predictions {
     sql: ${score} ;;
   }
 }
+
+
+
+
 
 # view: made_order_scores {
 #   # dimension: pk {

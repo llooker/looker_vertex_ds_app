@@ -31,6 +31,10 @@ view: customers {
     }
   }
 
+  dimension: advertising_channel_ {
+    type: string
+    sql: {% parameter advertising_channel %} ;;
+  }
 
   parameter: advertisement_category {
     default_value: "Accessories"
@@ -65,6 +69,12 @@ view: customers {
       value: "Tops & Tees"
     }
   }
+
+  dimension: advertisement_category_ {
+    type: string
+    sql: {% parameter advertisement_category %} ;;
+  }
+
 
   dimension: address {
     type: string
