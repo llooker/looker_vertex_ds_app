@@ -8,7 +8,7 @@ view: customers {
     sql: ${TABLE}.id ;;
   }
 
-  dimension: previous_purchases {
+  dimension: previous_orders {
     type: number
     sql: (select count(distinct transaction_id) from retail.transaction_detail where customer_id = ${id}) ;;
   }
@@ -18,7 +18,9 @@ view: customers {
     sql: (select sum(i.sale_price) from retail.transaction_detail, unnest(line_items) as i where customer_id = ${id}) ;;
   }
 
-  parameter: advertising_channel {
+  parameter: advertising_channel_ {
+    type: string
+    label: "Advertising Channel (filter)"
     default_value: "Accessories"
     allowed_value: {
       value: "Search"
@@ -31,12 +33,14 @@ view: customers {
     }
   }
 
-  dimension: advertising_channel_ {
+  dimension: advertising_channel {
     type: string
-    sql: {% parameter advertising_channel %} ;;
+    sql: {% parameter advertising_channel_ %} ;;
   }
 
-  parameter: advertisement_category {
+  parameter: advertisement_category_ {
+    type: string
+    label: "Advertising Category (filter)"
     default_value: "Accessories"
     allowed_value: {
       value: "Accessories"
@@ -70,9 +74,9 @@ view: customers {
     }
   }
 
-  dimension: advertisement_category_ {
+  dimension: advertisement_category {
     type: string
-    sql: {% parameter advertisement_category %} ;;
+    sql: {% parameter advertisement_category_ %} ;;
   }
 
 
@@ -203,7 +207,7 @@ view: customers {
   measure: average_previous_purchases {
     value_format_name: decimal_1
     type: average
-    sql: ${previous_purchases} ;;
+    sql: ${previous_orders} ;;
   }
 
   measure: average_prior_spend {
