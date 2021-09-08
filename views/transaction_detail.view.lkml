@@ -99,4 +99,10 @@ view: transaction_detail__line_items {
     type: string
     sql: ${TABLE}.sku ;;
   }
+
+  measure: total_sale_price {
+    value_format_name: usd
+    type: sum
+    sql: ${sale_price} ;;
+  }
 }

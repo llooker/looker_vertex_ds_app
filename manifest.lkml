@@ -2,7 +2,7 @@ project_name: "data_science_app"
 
 application: data-science-application {
   label: "Data Science for Marketing"
-  url: "http://localhost:8080/bundle.js"
+  file: "bundle.js"
   entitlements: {
     new_window: yes
     oauth2_urls: ["https://accounts.google.com/o/oauth2/v2/auth"]
